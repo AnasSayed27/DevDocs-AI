@@ -1,0 +1,4 @@
+1. Sandbox: Run agents in a container, VM, or unprivileged OS user with only the repo mounted—no prod .env, ~/.ssh, or cloud profiles accessible.
+2. Command Policy: Auto-allow read-only/test commands; hard-deny destructive, credential-reading, or outbound exfiltration commands.
+3. Supply Chain: Verify new packages on the registry before installing, pin exact lockfile versions, audit transitive deps (pip-audit/npm audit), and avoid adopting brand-new releases immediately.
+4. Tool Hookup: Most tools read AGENTS.md natively or via .github/copilot-instructions.md / .cursor/rules/ / CLAUDE.md / Antigravity .agents/skills/<name>/SKILL.md (use /grill-me in Scope/Lock; always diff-review /learn edits). Also enable gitleaks as a Day-1 pre-commit hook.
