@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -42,3 +42,20 @@ class RetrievalResult(BaseModel):
             elif isinstance(chunk, dict) and "source" in chunk:
                 data["source"] = chunk["source"]
         return data
+
+
+class QueryRequest(BaseModel):
+    """Represents an incoming user query request."""
+
+    query: str = Field(..., min_length=1, description="The user's natural language query")
+    top_k: int = Field(default=5, ge=1, description="Maximum number of chunks to retrieve")
+
+
+class GenerationResponse(BaseModel):
+    """Represents the generated answer and its supporting source citations."""
+
+    answer: str = Field(..., description="The generated answer or abstention message")
+    citations: List[str] = Field(
+        default_factory=list,
+        description="List of source identifiers cited in the answer",
+    )
