@@ -9,7 +9,7 @@ lock:
 	git tag -f $(LOCK_TAG)
 
 check:
-	@pytest
+	@python -m pytest
 	@echo "Checking for modified locks..."
 	@git diff --exit-code $(LOCK_TAG) -- $(LOCKED_PATHS) >/dev/null || { echo "FAIL: locked files modified"; exit 1; }
 	@echo "PASS: Checks passed."
