@@ -18,3 +18,9 @@
 2. 2-strike resets triggered: [0]
 3. Minutes per slice: [35 min]
 Status: [DONE]
+
+## Slice 2: API & Generation
+1. Escaped bugs found after make close: 0
+2. 2-strike resets triggered: [Enter 0, 1, or 2]
+3. Minutes per slice: [Enter your actual time]
+Status: DONE
