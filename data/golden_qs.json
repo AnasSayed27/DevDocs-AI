@@ -1,0 +1,14 @@
+[
+  {
+    "query": "How does authentication work with JWT tokens and API keys?",
+    "expected_source": "docs/architecture.md"
+  },
+  {
+    "query": "How do I configure database connection pooling?",
+    "expected_source": "docs/db.md"
+  },
+  {
+    "query": "How do I deploy Docker containers on AWS ECS?",
+    "expected_source": "docs/deploy.md"
+  }
+]
