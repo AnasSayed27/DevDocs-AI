@@ -34,7 +34,7 @@ Status: DONE
 ## Slice 4: Auth & Security
 1. Escaped bugs found after make close: 0
 2. 2-strike resets triggered: 0
-3. Minutes per slice: 25
+3. Minutes per slice: 35
 Status: DONE
 
 ## Slice 5: CI/CD & Cold Docs
