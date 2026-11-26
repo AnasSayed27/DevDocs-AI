@@ -1,0 +1,1 @@
+I have used pure numpy (with cosine similarity) over a vector DB for ultra fast and lightweight implementation and implemented structure aware chunking instead of random length chunking to improve similarity reference chunks and also implemented owasp delimiter llm01 with strict input prompt escaping and prompt wrapping inside use tag.

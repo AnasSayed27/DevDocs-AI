@@ -36,3 +36,9 @@ Status: DONE
 2. 2-strike resets triggered: 0
 3. Minutes per slice: 25
 Status: DONE
+
+## Slice 5: CI/CD & Cold Docs
+1. Escaped bugs found after make close: 0
+2. 2-strike resets triggered: 0
+3. Minutes per slice: 20
+Status: DONE
