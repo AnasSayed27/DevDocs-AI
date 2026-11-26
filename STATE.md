@@ -15,18 +15,24 @@
 
 ## Slice 1: Retrieval Core
 1. Escaped bugs found after make close: 0
-2. 2-strike resets triggered: [0]
-3. Minutes per slice: [35 min]
-Status: [DONE]
+2. 2-strike resets triggered: 0
+3. Minutes per slice: 35
+Status: DONE
 
 ## Slice 2: API & Generation
 1. Escaped bugs found after make close: 0
-2. 2-strike resets triggered: [0]
-3. Minutes per slice: [30]
+2. 2-strike resets triggered: 0
+3. Minutes per slice: 30
 Status: DONE
 
 ## Slice 3: Evaluation Harness
 1. Escaped bugs found after make close: 0
-2. 2-strike resets triggered: [0]
-3. Minutes per slice: [25]
+2. 2-strike resets triggered: 0
+3. Minutes per slice: 25
+Status: DONE
+
+## Slice 4: Auth & Security
+1. Escaped bugs found after make close: 0
+2. 2-strike resets triggered: 0
+3. Minutes per slice: 25
 Status: DONE
