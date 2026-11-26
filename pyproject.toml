@@ -1,0 +1,9 @@
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.ruff.lint]
+extend-ignore = ["EXE002"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/schemas.py" = ["SIM102", "UP006", "UP035", "I001"]
+"tests/test_retriever.py" = ["I001"]

@@ -1,8 +1,9 @@
 import inspect
 import json
 import time
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Sequence, Union
+from typing import Any
 
 from src.schemas import RetrievalResult
 
@@ -20,10 +21,10 @@ def _extract_source(result: Any) -> str:
         chunk = result.get("chunk")
         if isinstance(chunk, dict) and chunk.get("source"):
             return str(chunk["source"])
-        if hasattr(chunk, "source") and getattr(chunk, "source"):
+        if chunk is not None and hasattr(chunk, "source") and chunk.source:
             return str(chunk.source)
         return ""
-    if hasattr(result, "source") and getattr(result, "source"):
+    if hasattr(result, "source") and result.source:
         return str(result.source)
     if hasattr(result, "chunk") and hasattr(result.chunk, "source"):
         return str(result.chunk.source)
@@ -80,19 +81,19 @@ def calculate_reciprocal_rank(
     return 0.0
 
 
-def _load_golden_qa(golden_qa_path: Union[str, Path]) -> List[Dict[str, str]]:
+def _load_golden_qa(golden_qa_path: str | Path) -> list[dict[str, str]]:
     """Load and validate golden query/expected_source pairs from a JSON file."""
     path = Path(golden_qa_path)
     with path.open("r", encoding="utf-8") as f:
         data = json.load(f)
 
     if not isinstance(data, list):
-        raise ValueError(f"Golden QA dataset at {path} must be a JSON list.")
+        raise TypeError(f"Golden QA dataset at {path} must be a JSON list.")
 
-    validated: List[Dict[str, str]] = []
+    validated: list[dict[str, str]] = []
     for idx, item in enumerate(data):
         if not isinstance(item, dict):
-            raise ValueError(f"Golden QA entry at index {idx} must be a JSON object.")
+            raise TypeError(f"Golden QA entry at index {idx} must be a JSON object.")
         if "query" not in item or "expected_source" not in item:
             raise ValueError(
                 f"Golden QA entry at index {idx} must contain 'query' and 'expected_source'."
@@ -109,7 +110,7 @@ def _load_golden_qa(golden_qa_path: Union[str, Path]) -> List[Dict[str, str]]:
 def _invoke_retriever(
     retriever: Any,
     query_input: Any,
-    top_k: Optional[int] = None,
+    top_k: int | None = None,
 ) -> Sequence[RetrievalResult]:
     """Invoke a retriever instance (.retrieve) or callable with a query input."""
     target = retriever.retrieve if hasattr(retriever, "retrieve") else retriever
@@ -118,6 +119,7 @@ def _invoke_retriever(
             "retriever must be callable or expose a callable 'retrieve' method."
         )
 
+    params: Mapping[str, inspect.Parameter]
     try:
         params = inspect.signature(target).parameters
     except (TypeError, ValueError):
@@ -131,7 +133,7 @@ def _invoke_retriever(
         has_top_k and params["top_k"].default is inspect.Parameter.empty
     )
 
-    kwargs: Dict[str, Any] = {}
+    kwargs: dict[str, Any] = {}
     if top_k is not None and (has_top_k or accepts_var_kw):
         kwargs["top_k"] = top_k
     elif top_k is None and top_k_required:
@@ -146,10 +148,10 @@ def _invoke_retriever(
 
 def run_evaluation(
     retriever: Any,
-    golden_qa_path: Union[str, Path] = "data/golden_qs.json",
-    top_k: Optional[int] = None,
-    embedder: Optional[Callable[[str], Any]] = None,
-) -> Dict[str, float]:
+    golden_qa_path: str | Path = "data/golden_qs.json",
+    top_k: int | None = None,
+    embedder: Callable[[str], Any] | None = None,
+) -> dict[str, float]:
     """Run retrieval evaluation on golden QA pairs and return Hit@1, Hit@3, MRR, and latency."""
     golden_qa = _load_golden_qa(golden_qa_path)
     if not golden_qa:

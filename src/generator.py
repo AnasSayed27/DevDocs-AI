@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any
 
 from google import genai
 
@@ -14,10 +14,10 @@ class RAGGenerator:
 
     def __init__(
         self,
-        retrieval_results: List[RetrievalResult],
+        retrieval_results: list[RetrievalResult],
         similarity_threshold: float = SIMILARITY_THRESHOLD,
         model: str = DEFAULT_MODEL,
-        client: Optional[Any] = None,
+        client: Any | None = None,
     ):
         self.retrieval_results = retrieval_results
         self.similarity_threshold = similarity_threshold
@@ -35,7 +35,7 @@ class RAGGenerator:
         return max(result.similarity_score for result in self.retrieval_results)
 
     def _format_prompt(self, query: str) -> str:
-        context_blocks: List[str] = []
+        context_blocks: list[str] = []
         for idx, result in enumerate(self.retrieval_results, start=1):
             chunk_data = result.chunk.model_dump()
             header = chunk_data.get("metadata", {}).get("header")
@@ -53,9 +53,9 @@ class RAGGenerator:
             "Answer:"
         )
 
-    def _extract_citations(self) -> List[str]:
+    def _extract_citations(self) -> list[str]:
         seen = set()
-        citations: List[str] = []
+        citations: list[str] = []
         for result in self.retrieval_results:
             if result.similarity_score < self.similarity_threshold:
                 continue
@@ -85,10 +85,10 @@ class RAGGenerator:
 
 def generate_answer(
     query: str,
-    retrieval_results: List[RetrievalResult],
+    retrieval_results: list[RetrievalResult],
     similarity_threshold: float = SIMILARITY_THRESHOLD,
     model: str = DEFAULT_MODEL,
-    client: Optional[Any] = None,
+    client: Any | None = None,
 ) -> GenerationResponse:
     """Convenience function to generate an answer from retrieval results."""
     generator = RAGGenerator(

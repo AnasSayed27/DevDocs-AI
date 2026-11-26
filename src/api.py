@@ -1,6 +1,5 @@
 import os
 from types import SimpleNamespace
-from typing import List
 
 from fastapi import FastAPI
 
@@ -27,7 +26,7 @@ class _MockGenAIClient:
         self.models = _MockModels()
 
 
-def _mock_retrieve(query: str, top_k: int) -> List[RetrievalResult]:
+def _mock_retrieve(query: str, top_k: int) -> list[RetrievalResult]:
     """Return dummy retrieval results for Slice 2 before full pipeline wiring."""
     dummy_results = [
         RetrievalResult(
