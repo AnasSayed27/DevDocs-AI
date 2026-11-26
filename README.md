@@ -40,21 +40,21 @@ Client Request (POST /query, QueryRequest)
 
 ## Evaluation Metrics & Failure / Abstention Analysis
 
-Measured locally by running [`MarkdownChunker`](src/retriever.py), [`NumpyRetriever`](src/retriever.py), [`run_evaluation`](src/eval.py), and [`RAGGenerator`](src/generator.py) abstention logic with a deterministic pure-NumPy TF-IDF embedder (`5` Markdown docs, `20` `##` chunks, `25` in-domain queries, `5` out-of-domain queries):
+Measured locally via `python -m scripts.benchmark` running [`MarkdownChunker`](src/retriever.py), [`NumpyRetriever`](src/retriever.py), [`run_evaluation`](src/eval.py), and [`RAGGenerator`](src/generator.py) abstention logic with a deterministic pure-NumPy TF-IDF embedder (`5` Markdown docs, `20` `##` chunks, `25` in-domain queries, `5` out-of-domain queries):
 
 | Metric | Measured Value | Scope / Details |
 | :--- | :--- | :--- |
 | **Hit@1** | `1.000` (`25/25`) | `src/eval.py` (`run_evaluation`) across 25 in-domain queries |
 | **Hit@3** | `1.000` (`25/25`) | `src/eval.py` (`run_evaluation`) across 25 in-domain queries |
 | **MRR** | `1.000` | `src/eval.py` (`run_evaluation`) across 25 in-domain queries |
-| **Avg Latency** | `0.2164 ms` | `0.216436 ms` per query (`TfidfEmbedder` + `NumpyRetriever`) |
+| **Avg Latency** | `0.1449 ms` | `0.144868 ms` per query (`TfidfEmbedder` + `NumpyRetriever`) |
 | **OOD Abstention** | `4/5` (`80%`) | `RAGGenerator` (`SIMILARITY_THRESHOLD = 0.3`) on 5 out-of-domain probes |
 | **In-Domain False Abstention** | `4/25` (`16%`) | Rank-1 hits scoring below `0.3` under sparse TF-IDF (`min = 0.1915`, `mean = 0.4026`) |
 
 > **Abstention & Failure Analysis:**
 > - **False abstentions (`4/25` in-domain queries):** Even when `NumpyRetriever` ranked the correct chunk #1 (`Hit@1 = 1.000`), short paraphrased queries (`0.1915`–`0.2786` TF-IDF cosine similarity) fell below `SIMILARITY_THRESHOLD = 0.3` (`"When does RAGGenerator abstain instead of calling the LLM?"` at `0.1915`, `"How do I configure database connection pooling?"` at `0.2256`, `"How does MarkdownChunker split documentation sections?"` at `0.2780`, `"Which HTTP status code is returned for burst traffic throttling?"` at `0.2786`).
 > - **Missed OOD abstention (`1/5` OOD queries):** `"What was the company revenue in Q4 2025?"` scored `0.3238` due to unigram overlap on common function words without stop-word filtering; the other 4 OOD probes scored `0.1742`–`0.2727` and abstained cleanly.
-> - **Scope note:** This evaluation exercised the real retrieval, evaluation, and abstention modules over a 5-doc technical Markdown corpus using pure-NumPy TF-IDF (`_StubGenAIClient` only after threshold pass); `src/api.py` itself still uses `_mock_retrieve` until a live corpus/embedder is wired into `POST /query`.
+> - **Scope note:** [`scripts/benchmark.py`](scripts/benchmark.py) exercises the real retrieval, evaluation, and abstention modules over an in-script 5-doc corpus using pure-NumPy TF-IDF (`_StubGenAIClient` only after threshold pass); `src/api.py` itself still uses `_mock_retrieve` until a live corpus/embedder is wired into `POST /query`.
 
 ---
 
@@ -147,6 +147,8 @@ mypy .
 ├── .github/workflows/ci.yml   # CI pipeline (pytest, ruff, mypy, pip-audit, Trivy)
 ├── data/golden_qs.json        # Golden QA evaluation pairs
 ├── docs/DECISIONS.md          # Cold-written architecture trade-offs
+├── scripts/
+│   └── benchmark.py           # Reproducible pure-NumPy TF-IDF RAG & abstention benchmark
 ├── src/
 │   ├── api.py                 # FastAPI app and POST /query endpoint
 │   ├── eval.py                # Hit@1, Hit@3, MRR, and latency evaluation harness
