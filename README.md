@@ -1,6 +1,6 @@
 # DevDocs AI v2
 
-[![CI](https://github.com/AnasSayed27/DevDocs-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/AnasSayed27/DevDocs-AI/actions/workflows/ci.yml)
+[![CI](https://github.com/AnasSayed27/DevDocs_AI-v2/actions/workflows/ci.yml/badge.svg)](https://github.com/AnasSayed27/DevDocs_AI-v2/actions/workflows/ci.yml)
 ![Tests](https://img.shields.io/badge/pytest-8%20passed-brightgreen)
 ![OWASP](https://img.shields.io/badge/OWASP-LLM01%20Delimited-blue)
 ![Auth](https://img.shields.io/badge/Auth-X--API--Key%20(HMAC%20constant--time)-blue)
